@@ -1,0 +1,151 @@
+.hide {
+    display: none;
+}
+
+body {
+    color: white;
+    font-weight: 800;
+    background: darkblue;
+    align-items: center;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+body > * {
+    padding: 10px;
+    text-align: center;
+    width: 70%;
+}
+
+#topBar h1 {
+    position: relative;
+}
+
+#topBar span {
+    position: fixed;
+    left: 0;
+}
+
+#formDiv #login-form,
+#formDiv #signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#formDiv #login-form *,
+#formDiv #signup-form * {
+    width: 50%;
+}
+
+form {
+    font-weight: 500;
+}
+
+#formDiv > span {
+    display: block;
+    margin-top: 20px;
+}
+
+h4 {
+    margin: 15px 5px 25px 5px;
+    font-size: 20px;
+}
+
+/* Generic Table Rules */
+
+.gameboard td {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.gameboard .ship {
+    background: black;
+}
+
+.gameboard .placement {
+    background: grey;
+}
+
+.gameboard .badPlacement {
+    background: orange;
+}
+
+.gameboard .shot {
+    background: blue;
+    font-weight: bold;
+}
+
+.gameboard .shot {
+    color: white;
+    background: white;
+}
+
+.gameboard .shot.ship {
+    background: red;
+    color: black;
+}
+
+.gameboard .hit {
+    background: red;
+}
+
+/* Ship Placement */
+
+#shipPlacement table {
+    margin: 10px;
+}
+
+#shipPlacement td {
+    background: black;
+    width: 39px;
+    height: 39px;
+    border: 0px;
+}
+
+#shipLegend {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Solvo Placement */
+
+@keyframes badShot {
+    from {
+        background-color: darkorange;
+    }
+    to {
+        background-color: ;
+    }
+}
+
+@keyframes goodShot {
+    from {
+        background-color: green;
+    }
+    to {
+        background-color: ;
+    }
+}
+
+.badShot {
+    animation-name: badShot;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+}
+
+.goodShot {
+    animation-name: goodShot;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+
+}
+
+.readyToFire {
+    background: green;
+}

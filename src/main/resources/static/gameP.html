@@ -1,0 +1,122 @@
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <style>
+        #board td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .ship {
+            background: black;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="myId"></div>
+    <table id="enemy">
+
+    </table>
+    <table id="board">
+
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            let gp = gpFromURL();
+            $.get("/api/gp/" + gp).done(function(json) {
+                var data = json;
+                console.log("get worked");
+                console.log(data);
+                playerInfo(data);
+                //showOutput(JSON.stringify(data, null, 2));
+            }).fail(function() {
+                console.log("asset failed to load");
+            });
+
+            //assuming something like .html?gp=1
+            function gpFromURL() {
+                var gp = window.location.search.split('=');
+                return gp[1];
+            }
+        });
+
+    </script>
+    <script>
+        var board = document.getElementById('board');
+
+
+        function makeBoard(spots) {
+            for (let i = 0; i < 11; i++) {
+                var row = document.createElement('tr');
+                if (i == 0) {
+                    makeTopRowCells(row);
+                } else {
+                    for (let j = 0; j < 11; j++) {
+                        makeRowCells(row, i, j, spots);
+                    }
+                }
+                board.appendChild(row);
+            }
+        }
+
+        function makeTopRowCells(row) {
+            for (let i = 0; i < 11; i++) {
+                var cell = document.createElement('td');
+                if (i == 0) {
+
+                } else {
+                    cell.innerText = i;
+                }
+                row.appendChild(cell);
+            }
+        }
+
+        var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+        function makeRowCells(row, i, j, spots) {
+            if (j == 0) {
+                var cell = document.createElement('td');
+                cell.innerText = letters[i - 1];
+                row.appendChild(cell);
+            } else {
+                var cell = document.createElement('td');
+                cell.setAttribute("data-coordinate", letters[i - 1] + j)
+                //cell.innerText = letters[i - 1] + j;
+                cellStuff(cell, spots);
+                row.appendChild(cell);
+            }
+        }
+
+        //ships = ['A1', 'A2', 'A3', 'E4', 'D4', 'F4', 'G4']
+
+
+        function cellStuff(cell, spots) {
+            var ships = spots;
+            let coordinate = cell.getAttribute("data-coordinate");
+            if (ships.includes(coordinate)) {
+                cell.setAttribute("class", "ship");
+            }
+        }
+
+        function myInfo(email) {
+            var myInfo = document.getElementById('myId')
+            myInfo.innerText = email;
+        }
+
+        function playerInfo(data) {
+            var spots = data.Spots;
+            console.log(spots);
+            makeBoard(spots);
+            myInfo(data.Email);
+        }
+
+    </script>
+</body>
+
+</html>

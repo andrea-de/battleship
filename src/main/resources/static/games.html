@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Games</title>
+    <style>
+        #eInfo.bad {
+            font-weight: 500;
+            color: red;
+        }
+
+        #eInfo.good {
+            color: green;
+        }
+
+        table {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Games</h1>
+    <ol class="gamesHere"></ol>
+    <table>
+        <thead>
+            <tr>
+                <th>Game Start Date</th>
+                <th>Player 1</th>
+                <th>Player 2</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id='gamesInfo'>
+        </tbody>
+    </table>
+    <form id="login-form" onsubmit="return false">
+        <label>Email: <input type="text" name="email"></label>
+        <label>Password: <input type="text" name="pwd"></label>
+        <input type="button" value="Log in" onclick="login()">
+        <!-- Not in ebook -->
+    </form>
+
+    <form id="logout-form" onsubmit="return false">
+        <input type="button" value="Log out" onclick="logout()">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <form id="signup-form" onsubmit="return false">
+        <h3>Sign Up</h3>
+        <label>First Name: <input type="text" name="fName"></label><br/>
+        <label>Last Name: <input type="text" name="lName"></label><br/>
+        <label>Email: <input id="emailInput" type="text" name="email"></label>
+        <span id="eInfo"></span><br/>
+        <label>Password: <input type="text" name="pwd"></label><br/>
+        <input id="signupButton" type="button" value="Sign up" onclick="signup()">
+        <!-- Not in ebook -->
+    </form>
+    <script>
+        $('#emailInput').bind('keyup',
+            function() {
+                checkEmail();
+            });
+
+        function login() {
+            //evt.preventDefault();
+            //var form = evt.target.form;
+            $.post("api/login", {
+                    email: document.forms.namedItem('login-form')["email"].value,
+                    pwd: document.forms.namedItem('login-form')["pwd"].value
+                })
+                .done(function() {
+                    console.log('logged in');
+                    //console.log() USER AUTH
+                    //window.location.href = '/game.html';
+                }).fail(function() {
+                    console.log('login unsuccessful');
+                });
+        }
+
+        function logout() {
+            //evt.preventDefault();
+            $.post("api/logout", {})
+                .done(function() {
+                    console.log('logged out');
+                }).fail(function() {
+                    console.log('logout unsuccessful');
+                });
+        }
+
+        function checkEmail() {
+            //var emailInput = $('#emailInput');
+            if (emailInput.value == "") {} else {
+                $.post({
+                    url: "checkEmail",
+                    data: document.forms.namedItem('signup-form')["email"].value,
+                    contentType: "application/json",
+                    dataType: "text"
+                }).done(function(response, status, jqXHR) {
+                    console.log(jqXHR.responseText);
+                    $('#eInfo').text(jqXHR.responseText);
+                    newEmail();
+                }).fail(function(jqXHR, status, httpError) {
+                    //$('#eInfo').text(jqXHR.responseText);
+                });
+            }
+        }
+
+        function newEmail() {
+            if (eInfo.innerText == "email available") {
+                $('#eInfo').removeClass('bad').addClass('good');
+                $('#signupButton').removeAttr("disabled");
+            } else {
+                $('#eInfo').removeClass('good').addClass('bad');
+                $('#signupButton').attr('disabled', 'enabled');
+            }
+        }
+
+        function signup() {
+            let a = 0;
+            let b = 0;
+            a += (document.forms.namedItem('signup-form')["fName"].value != "") ? 1 : 0;
+            b += 1;
+            a += (document.forms.namedItem('signup-form')["lName"].value != "") ? 1 : 0;
+            b += 1;
+            a += (document.forms.namedItem('signup-form')["email"].value != "") ? 1 : 0;
+            b += 1;
+            a += (document.forms.namedItem('signup-form')["pwd"].value != "") ? 1 : 0;
+            b += 1;
+            if (a == b) {
+                //evt.preventDefault();
+                $.post({
+                    url: "players",
+                    data: JSON.stringify({
+                        firstName: document.forms.namedItem('signup-form')["fName"].value,
+                        lastName: document.forms.namedItem('signup-form')["lName"].value,
+                        email: document.forms.namedItem('signup-form')["email"].value,
+                        password: document.forms.namedItem('signup-form')["pwd"].value
+                    }),
+                    dataType: "text",
+                    contentType: "application/json"
+                }).done(function() {
+                    console.log('you are signed up');
+                }).fail(function() {
+                    alert('you are not signed up');
+                });
+            } else {
+                alert('please fill all fields');
+            }
+        }
+
+    </script>
+    <!--<script>
+        var thisData = [{
+            "createdate": "2017-11-22 18:44:50.033",
+            "id": 1,
+            "gamePlayers": [{
+                "id": 1,
+                "player": {
+                    "first name": "Jack",
+                    "id": 1,
+                    "email": "j.bauer@ctu.gov"
+                }
+            }, {
+                "id": 2,
+                "player": {
+                    "first name": "Chloe",
+                    "id": 2,
+                    "email": "c.obrian@ctu.gov"
+                }
+            }]
+        }, {
+            "createdate": "2017-11-22 18:44:50.06",
+            "id": 2,
+            "gamePlayers": [{
+                "id": 4,
+                "player": {
+                    "first name": "Chloe",
+                    "id": 2,
+                    "email": "c.obrian@ctu.gov"
+                }
+            }, {
+                "id": 3,
+                "player": {
+                    "first name": "David",
+                    "id": 4,
+                    "email": null
+                }
+            }]
+        }, {
+            "createdate": "2017-11-22 18:44:50.063",
+            "id": 3,
+            "gamePlayers": []
+        }]
+
+    </script>-->
+    <script>
+        $(document).ready(function() {
+            $.get("/api/mygames").done(function(json) {
+                var data = json;
+                console.log(data);
+                //console.log("get worked");
+                populate(data);
+                //showOutput(JSON.stringify(data, null, 2));
+            }).fail(function() {
+                console.log("asset failed to load");
+            });
+
+            /*
+            $.getJSON("http://localhost:8080/api/games", function(json) {
+                data = json;
+                console.log("getJSON worked");
+            });
+            */
+
+            //populate(thisData);
+
+            function populate(data) {
+                $(data).each(function(i, v) {
+                    makeGameInstance(v);
+                    fillGamesTable(v);
+                });
+            }
+
+            function makeGameInstance(v) {
+                var li = document.createElement('li');
+                var text = v.createdate + ': ';
+                if (v.gamePlayers.length != 0) {
+                    $(v.gamePlayers).each(function(ind, val) {
+                        if (ind == 0) {
+                            text = text + val.player.email;
+                        } else {
+                            text = text + ', ' + val.player.email + ' ';
+                        }
+                    });
+                }
+                $(li).text(text);
+                $('.gamesHere').append(li);
+            }
+
+            function fillGamesTable(game) {
+                var tr = document.createElement('tr');
+                var dataCell = document.createElement('td');
+                dataCell.innerText = game.createdate;
+                var playersCell = document.createElement('td');
+                var players = '';
+                for (gamePlayer of game.gamePlayers) {
+                    players = players + gamePlayer.player.email + ' ';
+                }
+                $(playersCell).text(players);
+                var gameLink = document.createElement('td');
+                if (game.gamePlayers.length < 2) {
+                    $(gameLink).text('join');
+                } else {
+                    $(gameLink).text('watch');
+                }
+
+                $(tr).append(dataCell).append(playersCell).append(gameLink).click(function() {
+                    window.location.href = '/game.html';
+                });
+                $('#gamesInfo').append(tr);
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

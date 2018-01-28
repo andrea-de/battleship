@@ -1,0 +1,188 @@
+<html>
+
+<head>
+    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
+    <style>
+        table td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .ship {
+            background: black;
+        }
+
+        .shot {
+            background: blue;
+            font-weight: bold;
+        }
+
+        #myBoard .shot {
+            color: white;
+            background: white;
+        }
+
+        #myBoard .shot.ship {
+            background: red;
+            color: black;
+        }
+
+        .hit {
+            background: red;
+        }
+
+    </style>
+</head>
+
+<body>
+    <table id="enemy">
+
+    </table>
+    <div id="myId">Joe Black</div>
+    <table id="myBoard">
+
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            let gp = gpFromURL();
+            $.get("/api/playing/" + gp).done(function(json) {
+                var data = json;
+                console.log("get worked");
+                console.log(data);
+                //game(data);
+                //showOutput(JSON.stringify(data, null, 2));
+            }).fail(function() {
+                console.log("asset failed to load");
+            });
+
+            //assuming something like .html?gp=1
+            function gpFromURL() {
+                var gp = window.location.search.split('=');
+                return gp[1];
+            }
+        });
+
+        var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+
+        var myShips = [
+            "A1",
+            "A2",
+            "A3",
+            "F8",
+            "G8",
+            "H8",
+            "I8"
+        ];
+
+        var myShots = {
+            1: [
+                "A1",
+                "A8",
+                "C7",
+                "A5"
+            ],
+            2: [
+                "F8",
+                "G5",
+                "H10",
+                "I1"
+            ]
+        }
+
+        var enemyShots = {
+            1: [
+                "A1",
+                "A8",
+                "C7",
+                "A5"
+            ],
+            2: [
+                "F8",
+                "G5",
+                "H10",
+                "I1"
+            ]
+        }
+
+    </script>
+    <script>
+        var enemy = document.getElementById('enemy');
+        var myBoard = document.getElementById('myBoard');
+
+        makeBoard(enemy);
+        makeBoard(myBoard);
+
+        function makeBoard(table) {
+            for (let i = 0; i < 11; i++) {
+                var row = document.createElement('tr');
+                if (i == 0) {
+                    topRowCells(row);
+                } else {
+                    for (let j = 0; j < 11; j++) {
+                        normalRowCells(row, i, j);
+                    }
+                }
+                table.appendChild(row);
+            }
+        }
+
+        function topRowCells(row) {
+            for (let i = 0; i < 11; i++) {
+                var cell = document.createElement('td');
+                if (i == 0) {} else {
+                    cell.innerText = i;
+                }
+                row.appendChild(cell);
+            }
+        }
+
+        function normalRowCells(row, i, j) {
+            if (j == 0) {
+                var cell = document.createElement('td');
+                cell.innerText = letters[i - 1];
+                row.appendChild(cell);
+            } else {
+                var cell = document.createElement('td');
+                cell.setAttribute("data-coordinate", letters[i - 1] + j)
+                //cell.innerText = letters[i - 1] + j;
+                //cellStuff(cell, spots);
+                row.appendChild(cell);
+            }
+        }
+
+        checkBoard('myBoard', myShips, 'ship', null);
+
+        function checkBoard(board, coordinates, varClass, text) {
+            for (let i = 0; i < coordinates.length; i++) {
+                $("#" + board + " td[data-coordinate='" + coordinates[i] + "']")
+                    .addClass(varClass)
+                    .text(text);
+            }
+        }
+
+        checkEnemy(myShots);
+
+        function checkEnemy(set) {
+            for (var i in myShots) {
+                var coordinates = myShots[i];
+                checkBoard('enemy', coordinates, 'shot', i);
+            }
+
+        }
+
+        checkShips(myShots);
+
+        function checkShips(set) {
+            for (var i in myShots) {
+                var coordinates = myShots[i];
+                checkBoard('myBoard', coordinates, 'shot', i);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
