@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
@@ -105,8 +106,12 @@ public class GameController {
         } else {
             String linkString = "viewer";
             for (GamePlayer gamePlayer : gamePlayerSet) {
-                if (gamePlayer.getPlayer().getEmail() == authentication.getName()){
+                System.out.println("Authentication Name: " + authentication.getName().getClass());
+                System.out.println("gameplayer email: " + gamePlayer.getPlayer().getEmail().getClass());
+                System.out.println(gamePlayer.getPlayer().getEmail() == authentication.getName());
+                if (gamePlayer.getPlayer().getEmail().equals(authentication.getName())){
                     linkString = gamePlayer.getid().toString();
+                    System.out.println(linkString);
                 }
             }
             gameLink = gameLink + linkString;
@@ -249,7 +254,11 @@ public class GameController {
             return new ResponseEntity<>("Not Logged In", HttpStatus.FORBIDDEN);
         }
         // add check to see how many open games
+
         // function to check if ship placement is okay
+        if (!checkShipPlacement(ships)){
+            return new ResponseEntity<>("Bad ship placement", HttpStatus.BAD_REQUEST);
+        }
         Game game = gRepo.findOne(gameid);
         Player player = pRepo.findByEmail(authentication.getName()).get(0);
         if (game.getPlayerSet().contains(player)){
@@ -259,7 +268,8 @@ public class GameController {
         for (String key: ships.keySet()){
             Ship newShip = sRepo.save(new Ship(key, gp, ships.get(key)));
         }
-        /* Refactored
+        // Refactored
+        /*
         for (Map.Entry<String, List<String>> shipEntry: ships.entrySet()){
             Ship newShip = sRepo.save(new Ship(shipEntry.getKey(), gp, shipEntry.getValue()));
         }
@@ -273,12 +283,16 @@ public class GameController {
     }
 
     @RequestMapping(path = "api/newgame", method = RequestMethod.POST)
-    public ResponseEntity<String> createGame(Authentication authentication, @RequestBody HashMap<String, List> ships){
+    public ResponseEntity<String> createGame(Authentication authentication, @RequestBody Map<String, List<String>> ships){
         if (authentication == null){
             return new ResponseEntity<>("Not Logged In", HttpStatus.FORBIDDEN);
         }
         // add check to see how many open games
+
         // function to check if ship placement is okay
+        if (!checkShipPlacement(ships)){
+            return new ResponseEntity<>("Bad ship placement", HttpStatus.BAD_REQUEST);
+        }
         Player player = pRepo.findByEmail(authentication.getName()).get(0);
         Game game = gRepo.save(new Game());
         GamePlayer gp = gpRepo.save(new GamePlayer(game, player));
@@ -290,6 +304,42 @@ public class GameController {
     }
 
     /// Check Ship placement ///
+    //@RequestMapping(path = "api/checkShips", method = RequestMethod.POST)
+    public Boolean checkShipPlacement(@RequestBody Map<String, List<String>> ships){
+        String[] requiredShips = {"Carrier", "Battleship", "Destroyer", "Cruiser", "Submarine"};
+        List<String> reqShips = new ArrayList<String>(Arrays.asList(requiredShips));
+        for (Map.Entry ship: ships.entrySet()){
+            if (checkSingleShip(ship.getKey().toString(), (List<String>) ship.getValue())){
+                reqShips.remove(ship.getKey().toString());
+            }
+        }
+        // Add duplicate coordinates
+        if (reqShips.isEmpty()){
+            return true;
+            //return new ResponseEntity<>("Ships checked", HttpStatus.ACCEPTED);
+        } else {
+            return false;
+            //return new ResponseEntity<>("All ships not placed", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private Boolean checkSingleShip(String shipName, List<String> coordinates){
+        if (shipName == "Carrier"){
+            return checkShipCoor(5,coordinates);
+        } else if (shipName == "Battleship"){
+            return checkShipCoor(4,coordinates);
+        } else if (shipName == "Destroyer"){
+            return checkShipCoor(2,coordinates);
+        } else {
+            return checkShipCoor(3,coordinates);
+        }
+    }
+
+    private Boolean checkShipCoor(long length ,List<String> coordinates){
+        // check if coordinates are in a row
+        return true;
+    }
+
 
     /// Check for too many games before joining or creating new one ///
 
@@ -428,7 +478,7 @@ public class GameController {
     }
 
     /* ---------------------- */
-    /* Fire and Check Salvos  */
+    /* Other????????????????  */
     /* ---------------------- */
 
     @RequestMapping("/api/score")

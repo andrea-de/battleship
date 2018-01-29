@@ -2,146 +2,147 @@
 <html>
 
 <head>
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-    <!-- End Bootstrap -->
+  <title>BATTLESHIP</title>
+  <link rel="icon" type="image/png" href="media/favicon.png">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <!-- End Bootstrap -->
+  <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
 
-    <script src="https://code.jquery.com/jquery-2.2.0.js"></script>
-    <link rel="stylesheet" type="text/css" href="style/reset.css">
-    <link rel="stylesheet" type="text/css" href="style/main.css">
+  <link rel="stylesheet" type="text/css" href="style/reset.css">
+  <link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
 
 <body>
 
 
-    <div id='topBar'>
-        <span>&lt;</span>
-        <h1>BATTLESHIP</h1>
+  <div class="topBar">
+    <button>back</button>
+    <h1>BATTLESHIP</h1>
+    <span>Hello Commander</span>
+  </div>
+  <div id="playerTable" class="homeDivs hide">
+    <h5>My Games</h5>
+    <table class="table table-striped table-dark">
+      <thead>
+        <tr>
+          <th>Start Date</th>
+          <th>Player 1</th>
+          <th>Player 2</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="myGamesInfo">
+      </tbody>
+    </table>
+  </div>
+  <div id="publicTable" class="homeDivs">
+    <h5>All Games</h5>
+    <table class="table table-striped table-dark">
+      <thead>
+        <tr>
+          <th>Start Date</th>
+          <th>Player 1</th>
+          <th>Player 2</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="gamesInfo">
+      </tbody>
+    </table>
+  </div>
+  <button id="createGame" class="homeDivs hide">Create Game</button>
+  <div id="formDiv" class="homeDivs">
+    <span>Sign In</span>
+    <div class="signDiv">
+      <form id="login-form" onsubmit="return false">
+        <input type="text" placeholder="Email Address" name="email">
+        <input type="text" placeholder="Password" name="pwd">
+        <input type="button" value="Log in" onclick="login()">
+        <!-- Not in ebook -->
+      </form>
     </div>
-    <div id='playerTable' class='homeDivs hide'>
-        <h5>My Games</h5>
-        <table class='table table-striped table-dark'>
-            <thead>
-                <tr>
-                    <th>Start Date</th>
-                    <th>Player 1</th>
-                    <th>Player 2</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id='myGamesInfo'>
-            </tbody>
+    <span>Sign Up</span>
+    <div class="signDiv hide">
+      <form id="signup-form" onsubmit="return false">
+        <input type="text" placeholder="First Name" name="fName">
+        <input type="text" placeholder="Last Name" name="lName">
+        <input id="emailInput" type="text" placeholder="Email Address" name="email">
+        <input type="text" placeholder="Password" name="pwd">
+        <span id="eInfo"> </span>
+        <input id="signupButton" type="button" value="Sign up" onclick="signup()">
+      </form>
+    </div>
+  </div>
+  <div id="shipPlacement" class="hide">
+    <h3>Place Ships</h3>
+    <div id="shipLegend">
+      <div data-length="5">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         </table>
-    </div>
-    <div id='publicTable' class='homeDivs'>
-        <h5>All Games</h5>
-        <table class='table table-striped table-dark'>
-            <thead>
-                <tr>
-                    <th>Start Date</th>
-                    <th>Player 1</th>
-                    <th>Player 2</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id='gamesInfo'>
-            </tbody>
+      </div>
+      <div data-length="4">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         </table>
+      </div>
+      <div data-length="3">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div data-length="3">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div data-length="2">
+        <table>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <button id="createGame" class='homeDivs hide'>Create Game</button>
-    <div id='formDiv' class='homeDivs'>
-        <span>Sign In</span>
-        <div class='signDiv'>
-            <form id="login-form" onsubmit="return false">
-                <input type="text" placeholder="Email Address" name="email">
-                <input type="text" placeholder="Password" name="pwd">
-                <input type="button" type="password" value="Log in" onclick="login()">
-                <!-- Not in ebook -->
-            </form>
-        </div>
-        <span>Sign Up</span>
-        <div class='signDiv hide'>
-            <form id="signup-form" onsubmit="return false">
-                <input type="text" placeholder="First Name" name="fName">
-                <input type="text" placeholder="Last Name" name="lName">
-                <input id="emailInput" type="text" placeholder="Email Address" name="email">
-                <input type="text" placeholder="Password" name="pwd">
-                <span id="eInfo"> </span>
-                <input id="signupButton" type="button" value="Sign up" onclick="signup()">
-            </form>
-        </div>
-    </div>
-    <div id='shipPlacement' class='hide'>
-        <h3>Place Ships</h3>
-        <div id='shipLegend'>
-            <div data-length="5">
-                <table>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div data-length="4">
-                <table>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div data-length="3">
-                <table>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div data-length="3">
-                <table>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-            <div data-length="2">
-                <table>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <button id='start'>Start</button>
-    </div>
-    <div id='gameBoardDiv1' class='gameDivs hide'>
-        <h4>Opponent Board</h4>
-        <h2 id='instructions'></h2>
-        <button id='fire'>Fire!</button>
-        <table class='gameboard'></table>
-    </div>
-    <div id='gameBoardDiv2' class='gameDivs hide'>
-        <h4>My Board</h4>
-        <table class='gameboard'></table>
+    <button id="start">Start</button>
+  </div>
+  <div id="gameBoardDiv1" class="gameDivs hide">
+    <h4>Opponent Board</h4>
+    <h2 id="instructions"></h2>
+    <button id="fire">Fire!</button>
+    <table class="gameboard"></table>
+  </div>
+  <div id="gameBoardDiv2" class="gameDivs hide">
+    <h4>My Board</h4>
+    <table class="gameboard"></table>
 
-    </div>
-    <div id="logoutDiv" class="hide">
-        <input id="logout" type="button" value="Log out" onclick="logout()">
-    </div>
-    <script src="js/main.js"></script>
+  </div>
+  <button id="logout" class="hide" type="button" onclick="logout()">Log Out</button>
+  <script src="js/main.js"></script>
 </body>
 
 </html>

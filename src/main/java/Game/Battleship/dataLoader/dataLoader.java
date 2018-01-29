@@ -5,13 +5,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
 import Game.Battleship.entity.*;
 import Game.Battleship.repository.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Component
+//@Component
+@RestController
 public class dataLoader {
 
+    @RequestMapping("/load")
     @Bean
     public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 
@@ -53,7 +57,7 @@ public class dataLoader {
         };
     }
 
-    @Bean
+    //@Bean
     public CommandLineRunner initData2(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 
         return (args) -> {
