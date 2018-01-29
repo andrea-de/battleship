@@ -87,7 +87,6 @@ function getData() {
       var data = json;
       //console.log(data);
       populate(data);
-      console.log(data);
       //showOutput(JSON.stringify(data, null, 2));
     }).fail(function () {
       console.log("games asset failed to load");

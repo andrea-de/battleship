@@ -106,12 +106,8 @@ public class GameController {
         } else {
             String linkString = "viewer";
             for (GamePlayer gamePlayer : gamePlayerSet) {
-                System.out.println("Authentication Name: " + authentication.getName().getClass());
-                System.out.println("gameplayer email: " + gamePlayer.getPlayer().getEmail().getClass());
-                System.out.println(gamePlayer.getPlayer().getEmail() == authentication.getName());
                 if (gamePlayer.getPlayer().getEmail().equals(authentication.getName())){
                     linkString = gamePlayer.getid().toString();
-                    System.out.println(linkString);
                 }
             }
             gameLink = gameLink + linkString;
