@@ -1,0 +1,103 @@
+.boards {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+}
+
+.boards>div {
+  width: 40%;
+}
+
+/* Generic Grid Rules */
+
+.gameboard td {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.gameboard .ship {
+  background: black;
+}
+
+.gameboard .placement {
+  background: grey;
+}
+
+.gameboard .badPlacement {
+  background: orange;
+}
+
+.gameboard .shot {
+  background: blue;
+  font-weight: bold;
+}
+
+.gameboard .shot {
+  color: white;
+  background: white;
+}
+
+.gameboard .shot.ship {
+  background: red;
+  color: black;
+}
+
+.gameboard .hit {
+  background: red;
+}
+
+/* Ship Placement Tables */
+
+#shipPlacement table {
+  margin: 10px;
+}
+
+#shipPlacement td {
+  background: black;
+  width: 39px;
+  height: 39px;
+  border: 0px;
+}
+
+#shipLegend {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Solvo Placement */
+
+@keyframes badShot {
+  from {
+    background-color: darkorange;
+  }
+  to {
+    background-color: ;
+  }
+}
+
+@keyframes goodShot {
+  from {
+    background-color: green;
+  }
+  to {
+    background-color: ;
+  }
+}
+
+.badShot {
+  animation-name: badShot;
+  animation-duration: .5s;
+  animation-iteration-count: infinite;
+}
+
+.goodShot {
+  animation-name: goodShot;
+  animation-duration: .5s;
+  animation-iteration-count: infinite;
+}
+
+.readyToFire {
+  background: green;
+}

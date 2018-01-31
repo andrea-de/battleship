@@ -2,13 +2,14 @@ package Game.Battleship.controller;
 
 import Game.Battleship.entity.*;
 import Game.Battleship.repository.*;
+import Game.Battleship.service.GameStatusService;
+import Game.Battleship.service.InstructionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
@@ -29,6 +30,9 @@ public class GameController {
 
     @Autowired
     private SalvoRepository saRepo;
+
+    @Autowired
+    private ScoreRepository scRepo;
 
     /* ------------------------------- */
     /* Authentication and Registration */
@@ -351,22 +355,22 @@ public class GameController {
         if(authentication.getName()!=gamePlayer.getPlayer().getEmail()){
             return new ResponseEntity<>("Cheater", HttpStatus.FORBIDDEN);
         }
-        // check if salvos have been made
+        // check if 3 salvos have been taken
         if (gamePlayer.getSalvos().size() > gamePlayer.opponent().getSalvos().size()){
             return new ResponseEntity<>("Not your turn", HttpStatus.FORBIDDEN);
         }
         int turns = gamePlayer.getSalvos().size();
         int thisTurn = turns + 1;
         Salvo salvo = saRepo.save(new Salvo(gamePlayer,thisTurn,coordinates));
+        if (GameStatusService.gameStatus(gamePlayer)) {
+            return new ResponseEntity<>("You Won", HttpStatus.ACCEPTED);
+        }
         return new ResponseEntity<>("Shots Fired", HttpStatus.ACCEPTED);
     }
 
-    /// check turns ///
-
-
-
+    // do i need this?
     @RequestMapping("/api/gp/salvos")
-    public Map<String, Object> salvos(){
+    public Map<String, Object> ssalvos(){
         Map<String, Object> salvos = new HashMap<>();
         List<GamePlayer> gameplayers = gpRepo.findAll();
         for (GamePlayer gp:gameplayers){
@@ -379,8 +383,10 @@ public class GameController {
         return salvos;
     }
 
+    // Working on section
+    // Don't need ???? p'playing'
     @RequestMapping("/api/playing/{id}")
-    public Map<String, Object> playing(@PathVariable Long id){
+    public Map<String, Object> pplaying(@PathVariable Long id){
         Map<String, Object> playing = new HashMap<>();
         GamePlayer gp = gpRepo.findOne(id);
         // Player Info
@@ -408,8 +414,13 @@ public class GameController {
         return playing;
     }
 
+    /* --------*/
+    /* Scoring */
+    /* --------*/
+
     @RequestMapping("/api/PlayerScores")
     public Map<Player, Integer> scores() {
+
         Map<Player, Integer> scores = new HashMap<>();
         List<Player> players = pRepo.findAll();
         for (Player player : players){
@@ -429,58 +440,86 @@ public class GameController {
         return scores;
     }
 
-
-    /* Marked for deletion */
-
-    @RequestMapping("/api")
-    public List<Game> listGames() {
-        List<Game> games = gRepo.findAll();
-        return games;
-    }
-
-    @RequestMapping("/api/gamesAttemptOne")
-    public List<Object> getGamesList1() {
-        List<Game> games = gRepo.findAll();
-        List<Object> gameMapList = new ArrayList<>();
-        for (Game game : games) {
-            Map<String, Object> gameInfo = new HashMap<>();
-            gameInfo.put("id",game.getid());
-            gameInfo.put("createdate",game.getcreateDate());
-
-            List<Object> gamePlayerList = new ArrayList<>();
-            Set<GamePlayer> gameset = game.getGamePlayerSet();
-            for (GamePlayer gamePlayer : gameset){
-                Map<String, Object> instance = new HashMap<>();
-                instance.put("id",gamePlayer.getid());
-                Player aPlayer = gamePlayer.getPlayer();
-                instance.put("player", getOpenInfo(aPlayer));
-                gamePlayerList.add(instance);
-            }
-            gameInfo.put("gamePlayers",gamePlayerList);
-            gameMapList.add(gameInfo);
-        }
-        return gameMapList;
-    }
-
-    @RequestMapping("/api/mygames")
-    public List<Object> myGames(Authentication authentication){
-        List<Game> games = gRepo.findAll();
-        List<Object> gameMapList = new ArrayList<>();
-        for (Game game : games) {
-            // putGameInfo no return, puts in data
-            putGameInfo(game, gameMapList, authentication);
-        }
-        return gameMapList;
-    }
-
-    /* ---------------------- */
-    /* Other????????????????  */
-    /* ---------------------- */
-
     @RequestMapping("/api/score")
     public String scoreTable(Authentication authentication){
         return "hi";
 
     }
 
+    /* ---------- */
+    /* Load Data  */
+    /* ---------- */
+
+    @RequestMapping("/api/loadStarterData")
+    public ResponseEntity<String> loadStarterData(){
+        loadData();
+        return new ResponseEntity<>("Loaded", HttpStatus.OK);
+    }
+
+    public void loadData(){
+        Boolean check1 = !pRepo.findByEmail("j.bauer@ctu.gov").isEmpty();
+        Boolean check2 = !pRepo.findByEmail("c.obrian@ctu.gov").isEmpty() && check1;
+        Boolean check3 = !pRepo.findByEmail("k").isEmpty() && check2;
+        Boolean check4 = !pRepo.findByEmail("dp@aol.com").isEmpty() && check3;
+        Boolean check5 = !pRepo.findByEmail("md@.com").isEmpty() && check4;
+        if (check5){
+            return;
+        }
+        Player p1 = pRepo.save(new Player("Jack", "Bauer", "j.bauer@ctu.gov", "password"));
+        p1.setPassword("j");
+        pRepo.save(p1);
+        Player p2 = pRepo.save(new Player("Chloe", "O'Brian", "c.obrian@ctu.gov", "c"));
+        Player p3 = pRepo.save(new Player("Kim", "Bauer", "k", "k"));
+        p3.setPassword("k");
+        pRepo.save(p3);
+        Player p4 = pRepo.save(new Player("David", "Palmer", "dp@aol.com", "d"));
+        Player p5 = pRepo.save(new Player("Michelle", "Dessler", "md@.com", "m"));
+        Game g1 = gRepo.save(new Game());
+        Game g2 = gRepo.save(new Game());
+        Game g3 = gRepo.save(new Game());
+        GamePlayer gp1 = gpRepo.save(new GamePlayer(g1, p1));
+        GamePlayer gp2 = gpRepo.save(new GamePlayer(g1, p2));
+        GamePlayer gp3 = gpRepo.save(new GamePlayer(g2, p4));
+        GamePlayer gp4 = gpRepo.save(new GamePlayer(g2, p2));
+        GamePlayer gp5 = gpRepo.save(new GamePlayer(g3, p3));
+        List<String> shipLoc1 = Arrays.asList("A1", "A2", "A3");
+        List<String> shipLoc2 = Arrays.asList("F8", "G8", "H8", "I8");
+        List<String> shipLoc3 = Arrays.asList("C4", "D4", "E4", "F4");
+        Ship s1 = sRepo.save(new Ship("Long", gp1, shipLoc1));
+        Ship s2 = sRepo.save(new Ship("Short", gp1, shipLoc2));
+        Ship s3 = sRepo.save(new Ship("Long", gp2, shipLoc3));
+        Ship s4 = sRepo.save(new Ship("Long", gp3, shipLoc1));
+
+        Score score2 = scRepo.save(new Score(g1, p1, "Lose", 0));
+        Score score1 = scRepo.save(new Score(g1, p2, "Win", 3));
+        Score score4 = scRepo.save(new Score(g2, p2, "Tie", 1));
+        Score score3 = scRepo.save(new Score(g2, p4, "Tie", 1));
+        Score score5 = scRepo.save(new Score(g3, p3, "Win", 3));
+    }
+
+    @RequestMapping("/api/loadMoreData")
+    public ResponseEntity<String> loadMoreData(){
+        loadSalvos();
+        return new ResponseEntity<>("Loaded", HttpStatus.OK);
+    }
+
+    public void loadSalvos(){
+        List<String> salvoLoc1 = Arrays.asList("A1", "B6", "I8");
+        List<String> salvoLoc2 = Arrays.asList("A2", "E4", "F7");
+        Salvo salvo1 = saRepo.save(new Salvo(gpRepo.findOne((long) 1), 1, salvoLoc1));
+        Salvo salvo2 = saRepo.save(new Salvo(gpRepo.findOne((long) 1), 2, salvoLoc2));
+        Salvo salvo3 = saRepo.save(new Salvo(gpRepo.findOne((long) 2), 1, salvoLoc1));
+    }
+
+    /* ------------- */
+    /* Instructions  */
+    /* ------------- */
+
+    @RequestMapping("/api/getInstruction/{gp}")
+    public String getInstruction(@PathVariable Long gp){
+        GamePlayer player = gpRepo.findOne(gp);
+        return InstructionService.setInstruction(player);
+
+        //return new ResponseEntity<>(player.getPlayer().getFirstName() + ": " + player.getInstruction(), HttpStatus.OK);
+    }
 }

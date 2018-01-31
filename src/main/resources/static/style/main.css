@@ -1,48 +1,83 @@
-.hide {
-  display: none;
-}
-
 body {
   color: white;
   font-weight: 800;
   background: darkblue;
   text-align: center;
-  align-items: center;
-  width: 800px;
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center;
-  align-content: center; */
-}
-
-body>div {
-  padding: 10px;
-  width: 70%;
+  height: 100vh;
+  width: 100%;
 }
 
 .topBar {
-  width: 70%;
+  width: 90%;
+  margin: 0 5% 0 5%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  padding-bottom: 1em;
 }
 
-.topBar h1 {
-  /* position: relative; */
+h1 {
+  font-size: 3em;
 }
 
-.topBar span {
-  /* position: fixed; */
-  /* left: 0; */
+h2 {
+  font-size: 2em;
 }
 
-#formDiv #login-form, #formDiv #signup-form {
+h4 {
+  margin: 15px 5px 25px 5px;
+  font-size: 20px;
+}
+
+.container {
+  width: 90%;
+  height: 90%;
+}
+
+.home {
+  display: flex;
+  justify-content: space-around;
+}
+
+.home>div {
+  width: 40%;
+}
+
+.left, .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile {
+  display: flex;
+  height: 30%;
+  padding-bottom: 1em;
+}
+
+.topscores table {}
+
+.welcome img {
+  width: 100%;
+}
+
+.profile>div {
+  width: 30%;
+}
+
+.profilePic img {
+  width: 80%;
+}
+
+/* Login and Register Forms  */
+
+#login-form, #signup-form {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#formDiv #login-form *, #formDiv #signup-form * {
+#login-form *, #signup-form * {
   width: 50%;
 }
 
@@ -55,101 +90,6 @@ form {
   margin-top: 20px;
 }
 
-h4 {
-  margin: 15px 5px 25px 5px;
-  font-size: 20px;
-}
-
-/* Generic Table Rules */
-
-.gameboard td {
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  border: 1px solid black;
-}
-
-.gameboard .ship {
-  background: black;
-}
-
-.gameboard .placement {
-  background: grey;
-}
-
-.gameboard .badPlacement {
-  background: orange;
-}
-
-.gameboard .shot {
-  background: blue;
-  font-weight: bold;
-}
-
-.gameboard .shot {
-  color: white;
-  background: white;
-}
-
-.gameboard .shot.ship {
-  background: red;
-  color: black;
-}
-
-.gameboard .hit {
-  background: red;
-}
-
-/* Ship Placement */
-
-#shipPlacement table {
-  margin: 10px;
-}
-
-#shipPlacement td {
-  background: black;
-  width: 39px;
-  height: 39px;
-  border: 0px;
-}
-
-#shipLegend {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-/* Solvo Placement */
-
-@keyframes badShot {
-  from {
-    background-color: darkorange;
-  }
-  to {
-    background-color: ;
-  }
-}
-
-@keyframes goodShot {
-  from {
-    background-color: green;
-  }
-  to {
-    background-color: ;
-  }
-}
-
-.badShot {
-  animation-name: badShot;
-  animation-duration: .5s;
-  animation-iteration-count: infinite;
-}
-
-.goodShot {
-  animation-name: goodShot;
-  animation-duration: .5s;
-  animation-iteration-count: infinite;
-}
-
-.readyToFire {
-  background: green;
+.big {
+  font-size: 1.5em;
 }

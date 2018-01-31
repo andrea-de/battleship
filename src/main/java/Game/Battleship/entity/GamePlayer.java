@@ -20,12 +20,15 @@ public class GamePlayer {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    // Not working
     @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
     private Set<Ship> ships = new HashSet<>();
 
     @OneToMany(mappedBy="gamePlayer", fetch=FetchType.EAGER)
     private Set<Salvo> salvos = new HashSet<>();
+
+    @ElementCollection
+    @JoinColumn(name = "remainingShipCoordinates")
+    public Set<String> remainingShipCoordinates = new HashSet<>();
 
     public GamePlayer(){}
 
@@ -79,4 +82,7 @@ public class GamePlayer {
         return salvos;
     }
 
+    public void setRemainingShipCoordinates(Set<String> remainingShipCoordinates) { this.remainingShipCoordinates = remainingShipCoordinates; }
+
+    public Set<String> getRemainingShipCoordinates() { return remainingShipCoordinates; }
 }

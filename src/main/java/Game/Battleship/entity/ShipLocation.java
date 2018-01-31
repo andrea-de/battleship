@@ -1,3 +1,5 @@
+// Depreciated Entity
+
 package Game.Battleship.entity;
 
 import javax.persistence.*;

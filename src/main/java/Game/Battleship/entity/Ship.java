@@ -27,6 +27,7 @@ public class Ship {
         this.shipType = shipType;
         this.gamePlayer = gameplayer;
         this.shipLocation = shipLocation;
+        gameplayer.remainingShipCoordinates.addAll(shipLocation);
     }
 
     public long getId() {

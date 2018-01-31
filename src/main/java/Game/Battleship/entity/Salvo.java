@@ -21,14 +21,21 @@ public class Salvo {
     @JoinColumn(name = "Salvos")
     private List<String> salvo = new ArrayList<>();
 
-    //@Embeddable
-
     public Salvo(){}
 
     public Salvo(GamePlayer gameplayer, int turn, List<String> attacks) {
         this.gamePlayer = gameplayer;
         this.turn = turn;
         this.salvo = attacks;
+        for (String coor: attacks) {
+            String toRemove = null;
+            for (String shipCoor : gameplayer.opponent().remainingShipCoordinates) {
+                if (coor.equals(shipCoor)) {
+                    toRemove = coor;
+                }
+            }
+            if (toRemove != null) gameplayer.opponent().remainingShipCoordinates.remove(toRemove);
+        }
     }
 
     public long getId() {

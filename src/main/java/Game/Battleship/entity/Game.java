@@ -20,6 +20,8 @@ public class Game {
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
 
+    private Boolean finished = false;
+
     public Game() { }
 
     public Game(Date date) {
@@ -46,6 +48,13 @@ public class Game {
         return players;
     }
 
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
 
     @Override
     public String toString() {

@@ -1,17 +1,14 @@
 // Navigation //
 ////////////////
 
-/* Use Jquery .hide .show .toggle (toggle class not needed) */
-/* Extra request for games - unknown */
-
 var loggedIn = false;
 var RecentURL;
+$('.game').toggle(false);
+$('.loggedIn').toggle(false);
 
 function loginTasks() {
-  $('#logout').toggleClass('hide');
-  $('#createGame').toggleClass('hide');
-  $('#formDiv').toggleClass('hide');
-  $('#playerTable').toggleClass('hide');
+  $('.loggedIn').toggle(true);
+  $('.notLoggedIn').toggle(false);
   getData();
   clearFields();
   if (loggedIn) {
@@ -21,58 +18,28 @@ function loginTasks() {
   }
 }
 
-function homePage() {
-  showHomeDivs();
-}
-
-function setupNewGame() {
-  console.log('hi');
-  hideHomeDivs();
-  $('#shipPlacement').toggleClass('hide');
-  $('#gameBoardDiv2').toggleClass('hide');
-  create = true;
-}
-
 function goToGame(url) {
-  hideHomeDivs();
-  $('#gameBoardDiv1').removeClass('hide');
-  $('#gameBoardDiv2').removeClass('hide');
+  $('.home').toggle(false);
+  $('.game').toggle(true);
   RecentURL = url;
   getGame(url);
 }
 
-function gameView() {
-  hideHomeDivs();
-  $('#gameBoardDiv1').toggleClass('hide');
-  $('#gameBoardDiv2').toggleClass('hide');
-}
-
-function hideHomeDivs() {
-  $('.homeDivs').each(function (i, v) {
-    $(v).addClass('hide');
-  });
-}
-
-function showHomeDivs() {
-  $('.homeDivs').each(function (i, v) {
-    $(v).removeClass('hide');
-  });
-}
-
-$('#formDiv > span').click(function () {
-  $('.signDiv').each(function (i, v) {
-    if ($(v).hasClass('hide')) {
-      $(v).removeClass('hide');
-    } else {
-      $(v).addClass('hide');
-    }
-  });
-});
-
-$('#topBar button').click(function () {
+$('.topBar button').click(function () {
   window.location.href = ('main.html');
   //window.location.replace('main.html');
-})
+});
+
+// Sign in or Sign up
+$('#formDiv>span:nth-of-type(1)').toggleClass('big');
+$('#formDiv div:nth-of-type(2)').toggle();
+$('#formDiv span').click(function () {
+  $('#formDiv>span:nth-of-type(1)').toggleClass('big');
+  $('#formDiv>span:nth-of-type(2)').toggleClass('big');
+  $('#formDiv>div:nth-of-type(1)').toggle();
+  $('#formDiv>div:nth-of-type(2)').toggle();
+});
+
 
 // Populate Tables //
 /////////////////////
@@ -344,6 +311,7 @@ function normalRowCells(row, i, j) {
 
 function getGame(url) {
   $.get(url).done(function (data) {
+    //console.log(data);
     fillBoards(data);
     //showOutput(JSON.stringify(data, null, 2));
   }).fail(function () {
@@ -361,6 +329,9 @@ function fillBoards(data) {
     board = enemyBoard;
     if (data[player].Turn) {
       enterSalvoCoordinates();
+      instructions('fire');
+    } else if (data[player].Ships != undefined) {
+      instructions('wait');
     }
   }
 }
@@ -415,12 +386,28 @@ function putShips(board, allShips) {
 // Fire !!! //
 //////////////
 
+function instructions(status) {
+  let ins = $('.instructions').toggle(true);
+  if (status == 'place') {
+    //console.log(ins.innerText);
+    ins.text('Place all ships on grid and Press Start. Spacebar key to rotate');
+  } else if (status == 'alone') {
+    ins.text('Waiting for opponent to join game');
+  } else if (status == 'fire') {
+    ins.text('Fire three shots into enemy grid');
+  } else if (status == 'wait') {
+    ins.text('Waiting for enemy shots');
+  } else {
+    //Endgame
+
+  }
+}
+
 $('#fire').toggle();
 
 var nextSalvo = [];
 var myGamePlayerNumber;
 var myGame;
-// where is salvo being created??? ///
 
 function enterSalvoCoordinates() {
   $('#gameBoardDiv1 td[data-coordinate]').mouseenter(function () {
@@ -440,17 +427,16 @@ function enterSalvoCoordinates() {
     if ($('.readyToFire').length == 3) {
       // ready to fire
       $('#gameBoardDiv1 td[data-coordinate]').off();
-      $('#fire').toggle().click(function () {
+      $('#fire').toggle(true).click(function () {
         // change 1 to GP
         fire(myGamePlayerNumber, nextSalvo);
         nextSalvo = [];
+        $('#fire').toggle(false);
         $('#gameBoardDiv1 td[data-coordinate]').removeClass('readyToFire');
       });
     }
   });
 }
-
-var salvoExample = ["A1", "A2", "B2"]
 
 function fire(gp, coordinates) {
   $.post({
@@ -470,10 +456,19 @@ function fire(gp, coordinates) {
 // Place Ships //
 /////////////////
 
+// DEBUG
+placeShips();
+
+$('#start').toggle();
+$('#shipPlacement').toggle();
+
 function placeShips() {
-  hideHomeDivs();
-  $('#shipPlacement').toggleClass('hide');
-  $('#gameBoardDiv2').toggleClass('hide');
+  $('.home').toggle(false);
+  $('.game').toggle(true);
+  instructions('place');
+  $('#gameBoardDiv1').toggle();
+  $('#shipPlacement').toggle();
+  $('#start').toggle();
   //joinGame(gameNumber); // move to start function(join/create)
 }
 
@@ -520,7 +515,6 @@ function place(shipSize) {
         function nextChar(char, n) {
           return String.fromCharCode(originCoor[0].charCodeAt(0) + n);
         }
-
         if (shipSize == 2) {
           shipCells = [$(this),
             $('#gameBoardDiv2 [data-coordinate=' + nextChar(coor[0], 1) + coor[1] + ']')
@@ -558,18 +552,22 @@ function place(shipSize) {
       }
       // Mark Cells to Place or Not
       if (placeCheck == shipSize) {
-        $(shipCells).each(function () {
-          this.addClass('placement');
+        shipship = shipCells;
+        $(shipCells).each(function (i, v) {
+          v.addClass('placement');
+          // DEBUG
+          console.log('This cell: ' + $(v).attr('data-coordinate') + ', class: ' + $(v).attr('class'));
         });
       } else {
-        $(shipCells).each(function () {
-          this.addClass('badPlacement');
+        $(shipCells).each(function (i, v) {
+          v.addClass('badPlacement');
         });
       }
     }).mouseleave(function () {
       $('td[data-coordinate]').removeClass('placement').removeClass('badPlacement');
     }).click(function () {
       if ($('.placement').length == shipSize) {
+        // Removes Legend Ships
         if (shipSize == 3) {
           if ($('div[data-length=3]').first().is(':visible')) {
             $('div[data-length=3]').first().toggle();
@@ -613,36 +611,21 @@ var join;
 
 $('#start').click(function () {
   if (Object.keys(shipsPlacement).length == 5) {
-    $('#shipPlacement').toggleClass('hide');
-    $('#gameBoardDiv1').removeClass('hide');
+    $('#shipPlacement').toggle();
+    $('#gameBoardDiv1').toggle();
     if (create) {
       createGame();
       create = false;
+      instructions('alone');
     } else {
       joinGame(join);
       join = null;
+      instructions('fire');
     }
   } else {
     alert('invalid ship placement');
   }
 });
-
-function checkPlacementOnServer(shipsToCheck) {
-  return true;
-  // $.post({
-  //   url: "api/checkShips/",
-  //   data: JSON.stringify(shipsToCheck),
-  //   dataType: "text",
-  //   contentType: "application/json"
-  // }).done(function () {
-  //   console.log('ships okay');
-  //   return true;
-  // }).fail(function (err) {
-  //   console.log(err);
-  //   console.log('ships not okay');
-  //   return true;
-  // });
-}
 
 // Join Game //
 ///////////////
@@ -665,7 +648,8 @@ function joinGame(gameNumber) {
 
 $('#createGame').click(function () {
   if (loggedIn) {
-    setupNewGame();
+    placeShips();
+    create = true;
   }
 })
 
@@ -685,3 +669,31 @@ function createGame() {
 
 // Scores //
 ////////////
+
+
+// Dev //
+/////////////
+
+function loadTestData() {
+  $.get('/api/loadStarterData').done(function (res) {
+    console.log(res);
+  }).fail(function (err) {
+    console.log(err);
+  });
+}
+
+function loadTestData2() {
+  $.get('/api/loadMoreData').done(function (res) {
+    console.log(res);
+  }).fail(function (err) {
+    console.log(err);
+  });
+}
+
+function getInstruction(gp) {
+  $.get('/api/getInstruction/' + gp).done(function (res) {
+    console.log(res);
+  }).fail(function (err) {
+    console.log(err);
+  });
+}
