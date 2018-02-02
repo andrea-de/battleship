@@ -20,9 +20,14 @@ public class Game {
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
 
-    private Boolean finished = false;
+    public Boolean finished = false;
 
     public Game() { }
+
+    // Creating finished game for Initial Sample loading
+    public Game(Boolean finished) {
+        this.finished = finished;
+    }
 
     public Game(Date date) {
         this.createDate = date;

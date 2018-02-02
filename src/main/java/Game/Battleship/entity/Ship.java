@@ -17,9 +17,17 @@ public class Ship {
     @JoinColumn(name = "gamePlayer")
     private GamePlayer gamePlayer;
 
+    //@OneToOne(mappedBy="ship", fetch=FetchType.EAGER)
+    //@PrimaryKeyJoinColumn
+    // private ShipLocation shipLocation;
+
     @ElementCollection
     @JoinColumn(name = "ShipLocation")
     private List<String> shipLocation = new ArrayList<>();
+
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private Other other;
 
     public Ship(){}
 
@@ -27,6 +35,7 @@ public class Ship {
         this.shipType = shipType;
         this.gamePlayer = gameplayer;
         this.shipLocation = shipLocation;
+        //this.shipLocation.setCoordinates(shipLocation);
         gameplayer.remainingShipCoordinates.addAll(shipLocation);
     }
 
@@ -45,4 +54,6 @@ public class Ship {
     public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
+
+
 }

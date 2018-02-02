@@ -38,6 +38,13 @@ public class Salvo {
         }
     }
 
+    // Salvo is created without needing to reference objects not yet instantiated
+    public Salvo(GamePlayer gameplayer, int turn, List<String> attacks, Boolean devMode) {
+        this.gamePlayer = gameplayer;
+        this.turn = turn;
+        this.salvo = attacks;
+    }
+
     public long getId() {
         return id;
     }

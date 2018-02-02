@@ -30,15 +30,26 @@ public class GamePlayer {
     @JoinColumn(name = "remainingShipCoordinates")
     public Set<String> remainingShipCoordinates = new HashSet<>();
 
+    public Boolean winner = false;
+
     public GamePlayer(){}
 
     public GamePlayer(Game game, Player player){
         this.game = game;
         this.player = player;
-        System.out.println();
     }
 
-    public Long getid() {
+    // Creating winning gameplayer for Initial Sample loading
+    public GamePlayer(Game game, Player player, Boolean won){
+        this.game = game;
+        this.player = player;
+        this.winner = won;
+    }
+
+    // For initialized data
+    //public
+
+    public Long getId() {
         return id;
     }
 
@@ -63,7 +74,7 @@ public class GamePlayer {
         players.addAll(this.getGame().getGamePlayerSet());
         if (players.size()<2){
             return null;
-        } else if (players.get(0).getid() != this.id){
+        } else if (players.get(0).getId() != this.id){
             return players.get(0);
         } else  {
             return players.get(1);

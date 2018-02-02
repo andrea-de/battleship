@@ -5,12 +5,14 @@ var loggedIn = false;
 var RecentURL;
 $('.game').toggle(false);
 $('.loggedIn').toggle(false);
+$('instructions').toggle(false);
 
 function loginTasks() {
   $('.loggedIn').toggle(true);
   $('.notLoggedIn').toggle(false);
   getData();
   clearFields();
+  getRecord();
   if (loggedIn) {
     loggedIn = false;
   } else {
@@ -86,7 +88,7 @@ function fillGamesTable(game) {
   if (game.gamePlayers[1] != null) {
     $(player2Cell).text(game.gamePlayers[1].player.email);
   } else if (game.link.split('/')[3] != 'viewer') {
-    $(player2Cell).text('Waiting for Opponent');
+    $(player2Cell).text('waiting for opponent');
   } else if (loggedIn) {
     let joinButton = document.createElement('button');
     joinButton.innerText = "Join";
@@ -119,7 +121,9 @@ function fillGamesTable(game) {
   $(tr).append(dateCell).append(player1Cell).append(player2Cell).append(linkCell);
 
   /// Distribute rows into correct table ///
-  if (game.link.split('/')[3] != 'viewer') {
+  if (game.complete) {
+    // put in finished games table
+  } else if (game.link.split('/')[3] != 'viewer') {
     $('#myGamesInfo').append(tr);
   } else if (game.link.split('/')[3] == 'viewer') {
     $('#gamesInfo').append(tr);
@@ -170,7 +174,7 @@ function checkEmail() {
   //var emailInput = $('#emailInput');
   if (emailInput.value == "") {} else {
     $.post({
-      url: "checkEmail",
+      url: "api/checkEmail",
       data: document.forms.namedItem('signup-form')["email"].value,
       contentType: "application/json",
       dataType: "text"
@@ -311,9 +315,7 @@ function normalRowCells(row, i, j) {
 
 function getGame(url) {
   $.get(url).done(function (data) {
-    //console.log(data);
     fillBoards(data);
-    //showOutput(JSON.stringify(data, null, 2));
   }).fail(function () {
     console.log("game asset failed to load");
   });
@@ -323,8 +325,15 @@ function getGame(url) {
 ///////////////////
 
 function fillBoards(data) {
+  console.log(data);
   let board = playerBoard;
+  let h4reference = 1;
+  if (Object.keys(data).length == 1) {
+    $('.gameDivs h4')[0].innerText = '...waiting for opponent...';
+  }
   for (player in data) {
+    $('.gameDivs h4')[h4reference].innerText = player;
+    h4reference = 0;
     fillBoard(board, data[player].Hits, data[player].Ships, data[player].Salvos)
     board = enemyBoard;
     if (data[player].Turn) {
@@ -392,7 +401,7 @@ function instructions(status) {
     //console.log(ins.innerText);
     ins.text('Place all ships on grid and Press Start. Spacebar key to rotate');
   } else if (status == 'alone') {
-    ins.text('Waiting for opponent to join game');
+    ins.text('waiting for opponent to join game');
   } else if (status == 'fire') {
     ins.text('Fire three shots into enemy grid');
   } else if (status == 'wait') {
@@ -455,9 +464,6 @@ function fire(gp, coordinates) {
 
 // Place Ships //
 /////////////////
-
-// DEBUG
-placeShips();
 
 $('#start').toggle();
 $('#shipPlacement').toggle();
@@ -552,11 +558,8 @@ function place(shipSize) {
       }
       // Mark Cells to Place or Not
       if (placeCheck == shipSize) {
-        shipship = shipCells;
         $(shipCells).each(function (i, v) {
           v.addClass('placement');
-          // DEBUG
-          console.log('This cell: ' + $(v).attr('data-coordinate') + ', class: ' + $(v).attr('class'));
         });
       } else {
         $(shipCells).each(function (i, v) {
@@ -670,20 +673,70 @@ function createGame() {
 // Scores //
 ////////////
 
-
-// Dev //
-/////////////
-
-function loadTestData() {
-  $.get('/api/loadStarterData').done(function (res) {
-    console.log(res);
+function getMyInfo() {
+  $.get('/api/profile').done(function (data) {
+    profile(data);
   }).fail(function (err) {
     console.log(err);
   });
 }
 
-function loadTestData2() {
-  $.get('/api/loadMoreData').done(function (res) {
+function profile(data) {
+  console.log(data);
+}
+
+function getRecord() {
+  $.get('/api/record').done(function (data) {
+    fillRecord(data);
+  }).fail(function (err) {
+    console.log(err);
+  });
+}
+
+function fillRecord(data) {
+  for (player in data) {
+    let markup = '<tr><td>' + player + '</td><td>' + data[player].wins + '</td><td>' + data[player].losses + '</td></tr>';
+    $('#record').append(markup);
+  }
+  sortTable(1, 'd');
+  for (let i = 3, len = $('#record tr').length; i < len; i++) {
+    // Always removing fourth row until there is no fourth row
+    //let j = 2;
+    //$('#record tr')[j].remove();
+  }
+}
+
+//borrowed
+function sortTable(column, direction) {
+  column = column || 0;
+  var tbl = document.getElementById("record");
+  var store = [];
+  for (var i = 0, len = tbl.rows.length; i < len; i++) {
+    var row = tbl.rows[i];
+    var sortnr = row.cells[column].textContent || row.cells[column].innerText;
+    if (!isNaN(sortnr)) {
+      sortnr = parseFloat(sortnr);
+    }
+    store.push([sortnr, row]);
+  }
+  store.sort(function (x, y) {
+    return x[0] > y[0] ? 1 : x[0] < y[0] ? -1 : 0;
+  });
+  // look for "d" (descending) in the direction to switch sort direction
+  if (direction && /d/.test(direction)) {
+    store.reverse();
+  }
+  for (var i = 0, len = store.length; i < len; i++) {
+    tbl.appendChild(store[i][1]);
+  }
+  store = null;
+}
+
+// Dev //
+/////////
+
+function loadTestData() {
+  $.get('/dev/loadStarterData').done(function (res) {
     console.log(res);
   }).fail(function (err) {
     console.log(err);

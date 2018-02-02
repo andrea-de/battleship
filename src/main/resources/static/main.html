@@ -54,22 +54,7 @@
               <th>Losses</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <th>Dave</th>
-              <th>15</th>
-              <th>11</th>
-            </tr>
-            <tr>
-              <th>Mary</th>
-              <th>11</th>
-              <th>5</th>
-            </tr>
-            <tr>
-              <th>T-Rex</th>
-              <th>10</th>
-              <th>5</th>
-            </tr>
+          <tbody id="record">
           </tbody>
         </table>
       </div>
@@ -78,7 +63,7 @@
         <div class="signDiv">
           <form id="login-form" onsubmit="return false">
             <input type="text" placeholder="Email Address" name="email">
-            <input type="text" placeholder="Password" name="pwd">
+            <input type="password" placeholder="Password" name="pwd">
             <input type="button" value="Log in" onclick="login()">
             <!-- Not in ebook -->
           </form>
@@ -131,9 +116,9 @@
     </div>
   </div>
   <div class="container game">
-    <p class="hide instructions">Inst</p>
+    <p class="instructions"></p>
     <div class="boards">
-      <div id="shipPlacement">
+      <div id="shipPlacement" class="right">
         <h3>Available Ships</h3>
         <div id="shipLegend">
           <div data-length="5">
@@ -186,14 +171,14 @@
         </div>
         <button id="start">Start</button>
       </div>
-      <div id="gameBoardDiv1" class="gameDivs">
-        <h4>Opponent Board</h4>
+      <div id="gameBoardDiv1" class="gameDivs right">
+        <h4>Player 2</h4>
         <h2 id="instructions"></h2>
         <button id="fire">Fire!</button>
         <table class="gameboard"></table>
       </div>
-      <div id="gameBoardDiv2" class="gameDivs">
-        <h4>My Board</h4>
+      <div id="gameBoardDiv2" class="gameDivs left">
+        <h4>Player 1</h4>
         <table class="gameboard"></table>
 
       </div>
