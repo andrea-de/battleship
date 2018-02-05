@@ -9,9 +9,9 @@ public class GameStatusService {
     public static Boolean gameStatus(GamePlayer gp){
         if (gp.opponent() == null){
             System.out.println(gp.getPlayer().toString() + " has no opponent.");
-        } else if (gp.opponent().remainingShipCoordinates == null){
+        } else if (gp.opponent().getRemainingShipCoordinates() == null){
             System.out.println(gp.getPlayer().toString() + "'s opponent never initialized ships");
-        } else if(gp.opponent().remainingShipCoordinates.isEmpty()) {
+        } else if(gp.opponent().getRemainingShipCoordinates().isEmpty()) {
             gp.getGame().finished = true;
             gp.winner = true;
             return true;

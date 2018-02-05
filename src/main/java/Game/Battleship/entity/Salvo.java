@@ -27,14 +27,18 @@ public class Salvo {
         this.gamePlayer = gameplayer;
         this.turn = turn;
         this.salvo = attacks;
+        List<String> remainingCoordinates = gameplayer.opponent().getRemainingShipCoordinates();
         for (String coor: attacks) {
-            String toRemove = null;
-            for (String shipCoor : gameplayer.opponent().remainingShipCoordinates) {
+            List<String> toRemove = new ArrayList<>();
+            for (String shipCoor : remainingCoordinates) {
                 if (coor.equals(shipCoor)) {
-                    toRemove = coor;
+                    toRemove.add(coor);
                 }
             }
-            if (toRemove != null) gameplayer.opponent().remainingShipCoordinates.remove(toRemove);
+            if (!toRemove.isEmpty()) {
+                remainingCoordinates.removeAll(toRemove);
+                gameplayer.opponent().setRemainingShipCoordinates(remainingCoordinates);
+            }
         }
     }
 

@@ -35,8 +35,16 @@ public class Ship {
         this.shipType = shipType;
         this.gamePlayer = gameplayer;
         this.shipLocation = shipLocation;
-        //this.shipLocation.setCoordinates(shipLocation);
-        gameplayer.remainingShipCoordinates.addAll(shipLocation);
+        List<String> newList = this.getGamePlayer().getRemainingShipCoordinates();
+        newList.addAll(shipLocation);
+        this.getGamePlayer().setRemainingShipCoordinates(newList);
+    }
+
+    // Dev Mode for initial data
+    public Ship(String shipType, GamePlayer gameplayer, List<String> shipLocation, Boolean devMode) {
+        this.shipType = shipType;
+        this.gamePlayer = gameplayer;
+        this.shipLocation = shipLocation;
     }
 
     public long getId() {

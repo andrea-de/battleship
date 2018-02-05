@@ -28,7 +28,7 @@ public class GamePlayer {
 
     @ElementCollection
     @JoinColumn(name = "remainingShipCoordinates")
-    public Set<String> remainingShipCoordinates = new HashSet<>();
+    private List<String> remainingShipCoordinates = new ArrayList<>();
 
     public Boolean winner = false;
 
@@ -40,14 +40,12 @@ public class GamePlayer {
     }
 
     // Creating winning gameplayer for Initial Sample loading
-    public GamePlayer(Game game, Player player, Boolean won){
+    public GamePlayer(Game game, Player player, Boolean won, List<String> remaining){
         this.game = game;
         this.player = player;
         this.winner = won;
+        this.remainingShipCoordinates = remaining;
     }
-
-    // For initialized data
-    //public
 
     public Long getId() {
         return id;
@@ -93,7 +91,7 @@ public class GamePlayer {
         return salvos;
     }
 
-    public void setRemainingShipCoordinates(Set<String> remainingShipCoordinates) { this.remainingShipCoordinates = remainingShipCoordinates; }
+    public void setRemainingShipCoordinates(List<String> remainingShipCoordinates) { this.remainingShipCoordinates = remainingShipCoordinates; }
 
-    public Set<String> getRemainingShipCoordinates() { return remainingShipCoordinates; }
+    public List<String> getRemainingShipCoordinates() { return remainingShipCoordinates; }
 }

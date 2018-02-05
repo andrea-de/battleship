@@ -35,8 +35,7 @@ public class DataLoader {
             if (pRepo.findAll().isEmpty()) {
                 DataLoaderService.loadPlayers(pRepo);
                 DataLoaderService.loadGames(gRepo, gpRepo, pRepo, sRepo, saRepo);
-                DataLoaderService.reconcile(gRepo, gpRepo, pRepo, sRepo, saRepo);
-                //DataLoaderService.loadFinishedGames(gRepo, pRepo, gpRepo);
+                DataLoaderService.loadFinishedGames(gRepo, pRepo, gpRepo);
             }
         };
     }
@@ -45,7 +44,7 @@ public class DataLoader {
     public CommandLineRunner moreInitData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 
         return (args) -> {
-            Player p1 = new Player("James", "Bond", "007@spy.gov", "7");
+            Player p1 = new Player("James", "Bond", "00", "7");
             playerRepository.save(p1);
         };
     }

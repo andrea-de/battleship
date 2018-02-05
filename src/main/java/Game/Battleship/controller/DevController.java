@@ -2,6 +2,7 @@ package Game.Battleship.controller;
 
 import Game.Battleship.entity.*;
 import Game.Battleship.repository.*;
+import Game.Battleship.service.DataLoaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,13 +42,15 @@ public class DevController {
     /* -------- */
 
     @RequestMapping("remaining")
-    public Map<String, Set<String>> remaining(){
-        Map<String, Set<String>> info = new HashMap<>();
+    public Map<String, List<String>> remaining(){
+        Map<String, List<String>> info = new HashMap<>();
         for (GamePlayer gp : gpRepo.findAll()){
 //            for (Ship ship: gp.getShips()){
 //                gp.remainingShipCoordinates.addAll(ship.getLocation());
 //            }
-             info.put(gp.getPlayer().toString() + ": gp: " + gp.toString(),gp.remainingShipCoordinates);
+            info.put(gp.toString(),gp.getRemainingShipCoordinates());
+            //System.out.println(gp.getPlayer().toString());
+            //System.out.println(gp.remainingShipCoordinates);
         }
         return info;
     }
@@ -58,9 +61,7 @@ public class DevController {
 
     @RequestMapping("loadStarterData")
     public ResponseEntity<String> loadStarterData(){
-//        DataLoaderService.loadPlayers(pRepo);
-//        DataLoaderService.loadGames(gRepo, gpRepo, pRepo, sRepo, saRepo);
-//        DataLoaderService.loadFinishedGames(gRepo, pRepo, gpRepo);
+
         return new ResponseEntity<>("Loaded", HttpStatus.OK);
     }
 
