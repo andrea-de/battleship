@@ -1,6 +1,7 @@
 package Game.Battleship.entity;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,7 @@ public class Game {
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
 
-    public Boolean finished = false;
+    private Boolean finished = false;
 
     public Game() { }
 

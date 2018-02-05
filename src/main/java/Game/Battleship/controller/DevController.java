@@ -61,6 +61,15 @@ public class DevController {
 
     @RequestMapping("loadStarterData")
     public ResponseEntity<String> loadStarterData(){
+        Game g = gRepo.getOne((long)1);
+        System.out.println(g.getFinished());
+        g.setFinished(true);
+        System.out.println(g.getFinished());
+        //gRepo.save(g);
+//        Player p = pRepo.findOne((long)1);
+//        System.out.println(p.toString());
+//        p.setFirstName("Jake");
+//        System.out.println(p.toString());
 
         return new ResponseEntity<>("Loaded", HttpStatus.OK);
     }

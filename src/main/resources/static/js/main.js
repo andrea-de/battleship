@@ -13,11 +13,26 @@ function loginTasks() {
   getData();
   clearFields();
   getRecord();
+  getProfile();
   if (loggedIn) {
     loggedIn = false;
   } else {
     loggedIn = true;
   }
+}
+
+function getProfile() {
+  $.get("/api/profile")
+    .done(function (data) {
+      if (data != null) {
+        var innerh4 = '<h4>' + data[0] + '</h4>';
+        var innerP1 = '<p> Email: ' + data[1] + '</p><br>';
+        var innerP2 = '<p>' + data[2] + ' Wins - ' + data[3] + ' Losses</p>';
+        $('.profileInfo').html(innerh4 + innerP1 + innerP2);
+      }
+    }).fail(function (err) {
+      console.log(err);
+    });
 }
 
 function goToGame(url) {
@@ -325,7 +340,7 @@ function getGame(url) {
 ///////////////////
 
 function fillBoards(data) {
-  console.log(data);
+  var playerTurn = true;
   let board = playerBoard;
   let h4reference = 1;
   if (Object.keys(data).length == 1) {
@@ -339,7 +354,10 @@ function fillBoards(data) {
     if (data[player].Turn) {
       enterSalvoCoordinates();
       instructions('fire');
+      //return;
     } else if (data[player].Ships != undefined) {
+      instructions('alone');
+    } else if (!playerTurn) {
       instructions('wait');
     }
   }
@@ -454,11 +472,16 @@ function fire(gp, coordinates) {
     dataType: "text",
     contentType: "application/json"
     //contentType: "application/json"
-  }).done(function () {
-    console.log('shots fired!');
+  }).done(function (res) {
+    console.log(res);
+
+    if (res == "You Won") {
+      $('.instructions').text(res)
+      $('#fire').toggle(false);
+    }
     getGame(RecentURL);
-  }).fail(function () {
-    console.log('misfire!');
+  }).fail(function (err) {
+    console.log(err);
   });
 }
 

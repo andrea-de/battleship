@@ -125,7 +125,7 @@ public class DataLoaderService {
             GamePlayer gp1 = gpRepo.save(new GamePlayer(g, playerset[n], true, null));
             GamePlayer gp2 = gpRepo.save(new GamePlayer(g, playerset[n2]));
             g.setFinished(true);
-            gp1.winner = true;
+            gp1.setWinner(true);
             //System.out.println("Game: " + g + "is finished: " + g.finished);
             //System.out.println("And the winner is: " + gp1);
         }

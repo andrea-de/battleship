@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
@@ -73,6 +74,27 @@ public class GameController {
         return new ResponseEntity<>("Not logged in", HttpStatus.OK);
     }
 
+    @RequestMapping(path = "profile",method = RequestMethod.GET)
+    public String[] profile(Authentication authentication){
+        if (authentication == null) return null;
+        String email = authentication.getName();
+        Player player = pRepo.findByEmail(email).get(0);
+        String[] info = new String[4];
+        info[0]= player.toString();
+        info[1] = authentication.getName();
+        int wins = 0;
+        int losses = 0;
+        for (GamePlayer gp : player.getGamePlayers()){
+            if (gp.getGame().getFinished()){
+                if(gp.getWinner()) wins++;
+                else losses++;
+            }
+        }
+        info[2]= Integer.toString(wins);
+        info[3] = Integer.toString(losses);
+        return info;
+    }
+
     /* ----------------- */
     /* Makes Game Tables */
     /* ----------------- */
@@ -116,7 +138,7 @@ public class GameController {
         gameInfo.put("id",game.getid());
         gameInfo.put("createdate",game.getcreateDate());
         gameInfo.put("gamePlayers",gamePlayerList);
-        gameInfo.put("complete",game.finished);
+        gameInfo.put("complete",game.getFinished());
         gameInfo.put("link",gameLink);
         gameMapList.add(gameInfo);
     }
@@ -339,7 +361,7 @@ public class GameController {
         int turns = gamePlayer.getSalvos().size();
         int thisTurn = turns + 1;
         Salvo salvo = saRepo.save(new Salvo(gamePlayer,thisTurn,coordinates));
-        if (GameStatusService.gameStatus(gamePlayer)) {
+        if (GameStatusService.gameStatus(gamePlayer, gpRepo, gRepo)) {
             return new ResponseEntity<>("You Won", HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("Shots Fired", HttpStatus.ACCEPTED);
@@ -359,8 +381,8 @@ public class GameController {
             long losses = 0;
             for (GamePlayer gp : player.getGamePlayers()){
                 Game g = gp.getGame();
-                if (g.finished){
-                    if (gp.winner){
+                if (g.getFinished()){
+                    if (gp.getWinner()){
                         wins++;
                     } else {
                         losses++;

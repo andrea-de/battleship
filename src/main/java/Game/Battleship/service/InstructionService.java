@@ -10,7 +10,7 @@ public class InstructionService {
     public static String setInstruction(GamePlayer gp){
         if (gp.opponent() == null){
             return "Wait for opponent to enter the stage.";
-        } else if (GameStatusService.gameStatus(gp)) {
+        } else if (true) {
             return "YOU WON!!!";
         } else if (gp.getSalvos().size() > gp.opponent().getSalvos().size()){
             return "Waiting for opponent salvos.";

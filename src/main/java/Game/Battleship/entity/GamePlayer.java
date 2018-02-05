@@ -30,7 +30,7 @@ public class GamePlayer {
     @JoinColumn(name = "remainingShipCoordinates")
     private List<String> remainingShipCoordinates = new ArrayList<>();
 
-    public Boolean winner = false;
+    private Boolean winner = false;
 
     public GamePlayer(){}
 
@@ -94,4 +94,8 @@ public class GamePlayer {
     public void setRemainingShipCoordinates(List<String> remainingShipCoordinates) { this.remainingShipCoordinates = remainingShipCoordinates; }
 
     public List<String> getRemainingShipCoordinates() { return remainingShipCoordinates; }
+
+    public Boolean getWinner() { return winner; }
+
+    public void setWinner(Boolean winner) { this.winner = winner; }
 }
