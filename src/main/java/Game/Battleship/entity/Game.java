@@ -18,10 +18,10 @@ public class Game {
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
+    private Boolean finished = new Boolean(false);
+
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     private Set<Score> scores = new HashSet<>();
-
-    private Boolean finished = false;
 
     public Game() { }
 
