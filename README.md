@@ -34,7 +34,7 @@ Data Loader Service creates sample games to generate records table and ongoing g
 
 Sample Games can be watched or played or new users and games may be created and joined. Instructions are provided during gameplay.
 
-<img src="github/demo3.PNG" alt="Welcome" style="text-align:center; width: 40%"/> <img src="github/demo4.PNG" alt="Welcome" style="text-align:center; width: 40%"/>
+<img src="github/demo3.PNG" alt="Welcome" style="text-align:center; width: 80%"/>
 
 ## Future Development
 
