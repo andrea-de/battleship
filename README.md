@@ -10,7 +10,7 @@ https://battlesh1p.herokuapp.com/main.html
 
 Java Spring boot java application using Java Persistence API (JPA) for object-relational mapping using Hibernate ORM. Authentication and authorization provided by Spring Security. Multi-user access and persistent data storage using PostgreSQL.
 
-<img src="github/demo1.jpg" alt="Welcome" style="text-align:center; width: 40%"/>
+<img src="github/demo1.png" alt="Welcome" style="text-align:center; width: 40%"/>
 
 ## Access
 
@@ -18,22 +18,28 @@ When server is started. Data Loader Service deletes all non-persistent sample en
 user access.
 
 The following is Access information for 5 Sample Users
+
 User Email Address: Password
+
 j.bauer@ctu.gov: j
+
 c.obrian@ctu.gov: c
+
 kim@alwaysHostage.org: k
+
 president@allstate.com: d
+
 m.dessler@ctu.gov: m
 
 Data Loader Service creates sample games to generate records table and ongoing games tables
 
-<img src="github/demo2.jpg" alt="Welcome" style="text-align:center; width: 80%"/>
+<img src="github/demo2.png" alt="Welcome" style="text-align:center; width: 80%"/>
 
 ## Gameplay
 
-Sample Games can be watched or played or new users and games may be created and joined.
+Sample Games can be watched or played or new users and games may be created and joined. Instructions are provided during gameplay.
 
-<img src="github/demo3.jpg" alt="Welcome" style="text-align:center; width: 40%"/> <img src="github/demo4.jpg" alt="Welcome" style="text-align:center; width: 40%"/>
+<img src="github/demo3.png" alt="Welcome" style="text-align:center; width: 40%"/> <img src="github/demo4.png" alt="Welcome" style="text-align:center; width: 40%"/>
 
 ## Future Development
 
@@ -43,5 +49,4 @@ Sample Games can be watched or played or new users and games may be created and 
 
 ## Necessary Bug fixes
 
-- Schema issue with production PostgreSQL configuration.
--  
+- Schema issue with production PostgreSQL configuration
