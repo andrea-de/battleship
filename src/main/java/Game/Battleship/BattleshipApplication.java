@@ -18,6 +18,7 @@ public class BattleshipApplication {
 		System.out.println("Website Ready");
 	}
 
+	//Heroku Postgres DB Configuration
 //	@Configuration
 //	public class DatabaseConfig {
 //		@Bean

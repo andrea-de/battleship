@@ -45,7 +45,7 @@ public class DataLoader {
 
         return (args) -> {
             Player p1 = new Player("James", "Bond", "00", "7");
-            playerRepository.save(p1);
+            //playerRepository.save(p1);
         };
     }
 }

@@ -14,11 +14,11 @@ public class DataLoaderService {
         p1.setPassword("j");
         pRepo.save(p1);
         Player p2 = pRepo.save(new Player("Chloe", "O'Brian", "c.obrian@ctu.gov", "c"));
-        Player p3 = pRepo.save(new Player("Kim", "Bauer", "k", "kb"));
+        Player p3 = pRepo.save(new Player("Kim", "Bauer", "kim@alwaysHostage.org", "k"));
         p3.setPassword("k");
         pRepo.save(p3);
-        Player p4 = pRepo.save(new Player("David", "Palmer", "dp@aol.com", "d"));
-        Player p5 = pRepo.save(new Player("Michelle", "Dessler", "md", "m"));
+        Player p4 = pRepo.save(new Player("David", "Palmer", "presPalmer@allstate.com", "d"));
+        Player p5 = pRepo.save(new Player("Michelle", "Dessler", "m.dessler@ctu.gov", "m"));
     }
 
     public static void loadGames(GameRepository gRepo, GamePlayerRepository gpRepo, PlayerRepository pRepo, ShipRepository sRepo, SalvoRepository saRepo){
@@ -34,8 +34,8 @@ public class DataLoaderService {
         GamePlayer gp1 = gpRepo.save(new GamePlayer(g1, pRepo.findByEmail("j.bauer@ctu.gov").get(0), false, set1a));
         GamePlayer gp2 = gpRepo.save(new GamePlayer(g1, pRepo.findByEmail("c.obrian@ctu.gov").get(0), false, set2a));
         GamePlayer gp3 = gpRepo.save(new GamePlayer(g2, pRepo.findByEmail("c.obrian@ctu.gov").get(0), false, set2b));
-        GamePlayer gp4 = gpRepo.save(new GamePlayer(g2, pRepo.findByEmail("dp@aol.com").get(0),false, set1b));
-        GamePlayer gp5 = gpRepo.save(new GamePlayer(g3, pRepo.findByEmail("k").get(0), false, set2b));
+        GamePlayer gp4 = gpRepo.save(new GamePlayer(g2, pRepo.findByEmail("presPalmer@allstate.com").get(0),false, set1b));
+        GamePlayer gp5 = gpRepo.save(new GamePlayer(g3, pRepo.findByEmail("kim@alwaysHostage.org").get(0), false, set2b));
         // Set 1
         List<String> shipLoc1 = Arrays.asList("C9", "C10");
         List<String> shipLoc2 = Arrays.asList("A1", "A2", "A3");
@@ -94,26 +94,13 @@ public class DataLoaderService {
         Salvo salvo13 = saRepo.save(new Salvo(gp3, 1, Arrays.asList("A1", "B6", "I8"), true));
     }
 
-    // Reconcile remaining coordinates for each GamePlayer
-    public static void reconcile(GameRepository gRepo, GamePlayerRepository gpRepo, PlayerRepository pRepo, ShipRepository sRepo, SalvoRepository saRepo){
-        for (GamePlayer gp : gpRepo.findAll()){
-//            for (Ship ship: gp.getShips()){
-//                System.out.println(ship.getGamePlayer());
-//                System.out.println(ship.getShipType());
-//                gp.remainingShipCoordinates.addAll(ship.getLocation());
-//            }
-            System.out.println(gp.getRemainingShipCoordinates());
-
-        }
-    }
-
     public static void loadFinishedGames(GameRepository gRepo, PlayerRepository pRepo, GamePlayerRepository gpRepo){
         Player[] playerset = new Player[5];
         playerset[0] = (pRepo.findByEmail("j.bauer@ctu.gov").get(0));
         playerset[1] = (pRepo.findByEmail("c.obrian@ctu.gov").get(0));
-        playerset[2] = (pRepo.findByEmail("dp@aol.com").get(0));
-        playerset[3] = (pRepo.findByEmail("k").get(0));
-        playerset[4] = (pRepo.findByEmail("md").get(0));
+        playerset[2] = (pRepo.findByEmail("presPalmer@allstate.com").get(0));
+        playerset[3] = (pRepo.findByEmail("kim@alwaysHostage.org").get(0));
+        playerset[4] = (pRepo.findByEmail("m.dessler@ctu.gov").get(0));
         for (int i=0;i<10;i++){
             Game g = gRepo.save(new Game(true));
             Random rand = new Random();
@@ -126,8 +113,6 @@ public class DataLoaderService {
             GamePlayer gp2 = gpRepo.save(new GamePlayer(g, playerset[n2]));
             g.setFinished(true);
             gp1.setWinner(true);
-            //System.out.println("Game: " + g + "is finished: " + g.finished);
-            //System.out.println("And the winner is: " + gp1);
         }
     }
 }
