@@ -34,7 +34,7 @@ public class DataLoader {
         return (String... args) -> {
             if (pRepo.findAll().isEmpty()) {
                 // Reset not working - possibly unable to search through during loading
-                DataLoaderService.resetSampleData(pRepo, gRepo, gpRepo, sRepo, saRepo);
+                // DataLoaderService.resetSampleData(pRepo, gRepo, gpRepo, sRepo, saRepo);
                 DataLoaderService.loadPlayers(pRepo);
                 DataLoaderService.loadGames(gRepo, gpRepo, pRepo, sRepo, saRepo);
                 DataLoaderService.loadFinishedGames(gRepo, pRepo, gpRepo);
