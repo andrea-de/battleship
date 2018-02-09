@@ -19,14 +19,14 @@ public class BattleshipApplication {
 	}
 
 	//Heroku Postgres DB Configuration
-//	@Configuration
-//	public class DatabaseConfig {
-//		@Bean
-//		@Primary
-//		@ConfigurationProperties(prefix = "spring.datasource")
-//		public DataSource dataSource() {
-//			return DataSourceBuilder.create().build();
-//		}
-//	}
+	@Configuration
+	public class DatabaseConfig {
+		@Bean
+		@Primary
+		@ConfigurationProperties(prefix = "spring.datasource")
+		public DataSource dataSource() {
+			return DataSourceBuilder.create().build();
+		}
+	}
 }
 
