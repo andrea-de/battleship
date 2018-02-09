@@ -45,4 +45,4 @@ Sample Games can be watched or played or new users and games may be created and 
 
 ## Necessary Bug fixes
 
-- Schema issue with production PostgreSQL configuration
+- Reset data function will not load on bootrun
