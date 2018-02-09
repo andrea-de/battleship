@@ -8,7 +8,7 @@ https://battlesh1p.herokuapp.com/main.html
 
 ## Technology Detail
 
-Java Spring boot java application using Java Persistence API (JPA) for object-relational mapping using Hibernate ORM. Authentication and authorization provided by Spring Security. Multi-user access and persistent data storage using PostgreSQL.
+Java Spring Boot application using the Java Persistence API (JPA) and object-relational mapping implemented with Hibernate ORM. Multi-user access with Authentication and Authorization provided by Spring Security. Persistent data storage using PostgreSQL and hosted by Heroku with database services also provided by Heroku through Amazon Web Services (AWS).
 
 <img src="github/demo1.PNG" alt="Welcome" style="text-align:left; width: 40%"/>
 
