@@ -40,7 +40,8 @@ Sample Games can be watched or played or new users and games may be created and 
 
 - Front-end UI Styling adding mobile responsivity
 - Migrate remaining Rest Controller functions to call Service functions following MVC architecture
-- Aggregate request and response JSON objects to decrease number of requests  
+- Aggregate request and response JSON objects to decrease number of requests
+- Add Finished Games table (perhaps only for users to see their own past games)
 
 ## Necessary Bug fixes
 

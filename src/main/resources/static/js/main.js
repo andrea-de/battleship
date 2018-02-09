@@ -340,7 +340,8 @@ function getGame(url) {
 ///////////////////
 
 function fillBoards(data) {
-  var playerTurn = true;
+  let playerTurn = false;
+  let winner = false;
   let board = playerBoard;
   let h4reference = 1;
   if (Object.keys(data).length == 1) {
@@ -351,10 +352,15 @@ function fillBoards(data) {
     h4reference = 0;
     fillBoard(board, data[player].Hits, data[player].Ships, data[player].Salvos)
     board = enemyBoard;
-    if (data[player].Turn) {
+    if (data[player].Winner == "True" || winner) {
+      instructions('You Won');
+      //$('.instructions').text(res);
+      $('#fire').toggle(false);
+      winner = true;
+    } else if (data[player].Turn) {
       enterSalvoCoordinates();
       instructions('fire');
-      //return;
+      playerTurn = true;
     } else if (data[player].Ships != undefined) {
       instructions('alone');
     } else if (!playerTurn) {
@@ -425,8 +431,7 @@ function instructions(status) {
   } else if (status == 'wait') {
     ins.text('Waiting for enemy shots');
   } else {
-    //Endgame
-
+    ins.text('You Won');
   }
 }
 
@@ -474,11 +479,6 @@ function fire(gp, coordinates) {
     //contentType: "application/json"
   }).done(function (res) {
     console.log(res);
-
-    if (res == "You Won") {
-      $('.instructions').text(res)
-      $('#fire').toggle(false);
-    }
     getGame(RecentURL);
   }).fail(function (err) {
     console.log(err);

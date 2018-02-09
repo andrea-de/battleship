@@ -95,24 +95,66 @@ public class DataLoaderService {
     }
 
     public static void loadFinishedGames(GameRepository gRepo, PlayerRepository pRepo, GamePlayerRepository gpRepo){
-        Player[] playerset = new Player[5];
-        playerset[0] = (pRepo.findByEmail("j.bauer@ctu.gov").get(0));
-        playerset[1] = (pRepo.findByEmail("c.obrian@ctu.gov").get(0));
-        playerset[2] = (pRepo.findByEmail("presPalmer@allstate.com").get(0));
-        playerset[3] = (pRepo.findByEmail("kim@alwaysHostage.org").get(0));
-        playerset[4] = (pRepo.findByEmail("m.dessler@ctu.gov").get(0));
+        Player[] players = new Player[5];
+        players[0] = (pRepo.findByEmail("j.bauer@ctu.gov").get(0));
+        players[1] = (pRepo.findByEmail("c.obrian@ctu.gov").get(0));
+        players[2] = (pRepo.findByEmail("presPalmer@allstate.com").get(0));
+        players[3] = (pRepo.findByEmail("kim@alwaysHostage.org").get(0));
+        players[4] = (pRepo.findByEmail("m.dessler@ctu.gov").get(0));
         for (int i=0;i<10;i++){
             Game g = gRepo.save(new Game(true));
             Random rand = new Random();
-            int  n = rand.nextInt(playerset.length);
-            int n2 = rand.nextInt(playerset.length);
+            int  n = rand.nextInt(players.length);
+            int n2 = rand.nextInt(players.length);
             while (n == n2){
-                n2 = rand.nextInt(playerset.length);
+                n2 = rand.nextInt(players.length);
             }
-            GamePlayer gp1 = gpRepo.save(new GamePlayer(g, playerset[n], true, null));
-            GamePlayer gp2 = gpRepo.save(new GamePlayer(g, playerset[n2]));
+            GamePlayer gp1 = gpRepo.save(new GamePlayer(g, players[n], true, null));
+            GamePlayer gp2 = gpRepo.save(new GamePlayer(g, players[n2]));
             g.setFinished(true);
             gp1.setWinner(true);
+        }
+    }
+
+    public static void resetSampleData(PlayerRepository pRepo, GameRepository gRepo, GamePlayerRepository gpRepo, ShipRepository sRepo, SalvoRepository saRepo){
+        Player[] players = new Player[5];
+        players[0] = (pRepo.findByEmail("j.bauer@ctu.gov").get(0));
+        players[1] = (pRepo.findByEmail("c.obrian@ctu.gov").get(0));
+        players[2] = (pRepo.findByEmail("presPalmer@allstate.com").get(0));
+        players[3] = (pRepo.findByEmail("kim@alwaysHostage.org").get(0));
+        players[4] = (pRepo.findByEmail("m.dessler@ctu.gov").get(0));
+        Set<Game> games = new HashSet<Game>();
+        Set<GamePlayer> gplayers = new HashSet<GamePlayer>();
+        Set<Ship> ships = new HashSet<Ship>();
+        Set<Salvo> salvos = new HashSet<Salvo>();
+        for (Player p : players) {
+            gplayers.addAll(p.getGamePlayers());
+        }
+        for(GamePlayer gp : gplayers){
+            games.add(gp.getGame());
+            //gplayers.add(gp);
+            for (Ship ship : gp.getShips()){
+                ships.add(ship);
+            }
+            for (Salvo salvo : gp.getSalvos()){
+                salvos.add(salvo);
+            }
+        }
+
+        for (Salvo salvo: salvos){
+            saRepo.delete(salvo);
+        }
+        for (Ship ship : ships){
+            sRepo.delete(ship);
+        }
+        for (GamePlayer gameplayer : gplayers){
+            gpRepo.delete(gameplayer);
+        }
+        for (Game game : games){
+            gRepo.delete(game);
+        }
+        for (Player player: players){
+            pRepo.delete(player);
         }
     }
 }

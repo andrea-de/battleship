@@ -193,6 +193,7 @@ public class GameController {
         // Player hits
         if (gp.opponent()!=null) {
             gamePlayerInfo.put("Hits", hitsOn(gp));
+            if (gp.getWinner()) gamePlayerInfo.put("Winner", "True");
             if (authorized){
                 gamePlayerInfo.put("Ships", gpShips(gp));
                 gamePlayerInfo.put("Salvos", gpSalvos(gp));
